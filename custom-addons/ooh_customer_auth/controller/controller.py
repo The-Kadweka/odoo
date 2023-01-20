@@ -16,7 +16,7 @@ today = datetime.today()
 
 class MoneyController(http.Controller):
     @http.route('/view/currency',type='json',auth="public",cors='*',method=['POST'])
-    def view_currency(self):
+    def view_currency(self,**kw):
         currencies=[]
         currency = request.env['res.currency'].sudo().search([('active',"=",True)])
         for rec in currency:
