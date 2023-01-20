@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_expense_form_view" model="ir.ui.view">
+        <field name="name">account.spend.form</field>
+        <field name="model">account.spend</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="amt"/>
+                            <!-- <field name="minus_6"/> -->
+                        </group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="partner_id"/>
+                            <field name="spent_on"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="users_expense_tree_view" model="ir.ui.view">
+        <field name="name">account.spend.tree</field>
+        <field name="model">account.spend</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="spent_on"/>
+                <field name="amt"/>
+            </tree>
+        </field>
+    </record>
+    <record id="user_expense_center" model="ir.actions.act_window">
+        <field name="name">User Expenses</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.spend</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="user_account_work_form_view" model="ir.ui.view">
+        <field name="name">users.account.form</field>
+        <field name="model">users.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="balance"/>
+                            <field name="expenditure"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="account_users_tree_view" model="ir.ui.view">
+        <field name="name">users.account.tree</field>
+        <field name="model">users.account</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="balance"/>
+                <field name="expenditure"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_user_account_center" model="ir.actions.act_window">
+        <field name="name">Users Accounts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">users.account</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="account_goals_form_view" model="ir.ui.view">
+        <field name="name">personal.goals.form</field>
+        <field name="model">personal.goals</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="target"/>
+                            <field name="current_saving"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="date"/>
+                            <field name="expense_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="users_goals_tree_view" model="ir.ui.view">
+        <field name="name">personal.goals.tree</field>
+        <field name="model">personal.goals</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id"/>
+                <field name="name"/>
+                <field name="target"/>
+                <field name="to_date"/>
+            </tree>
+        </field>
+    </record>
+    <record id="user_goals_center" model="ir.actions.act_window">
+        <field name="name">Personal Goals</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">personal.goals</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+<menuitem id="action_config_menu" name="Configuration" parent="menu_expense" sequence="3"/>
+<menuitem id="users_accounts_center" name="Accounts" parent="action_config_menu" action="action_user_account_center" sequence="0"/>
+<menuitem id="users_expense_center" name="Expenses" parent="action_config_menu" action="user_expense_center" sequence="1"/>
+<menuitem id="users_goals_center" name="Personal Goals" parent="action_config_menu" action="user_goals_center" sequence="2"/>
+<!-- <menuitem id="advert_center_view_menu" name="Lets Advertise" parent="menu_expense" action="user_advert_center" sequence="3"/> -->
+</odoo>

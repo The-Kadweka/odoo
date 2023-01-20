@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.module.category" id="money_level_manager">
+        <field name="name">Money Manager Administrator</field>
+        <field name="description">Money Manager</field>
+        <field name="sequence">20</field>
+        </record>
+    
+        <record id="money_manager_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="money_level_manager"/>
+        </record>
+
+</odoo>

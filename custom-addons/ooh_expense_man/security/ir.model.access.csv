@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+ooh_expense_man.access_users_account,access_users_account,ooh_expense_man.model_users_account,base.group_user,1,1,1,1
+ooh_expense_man.access_account_spend,access_account_spend,ooh_expense_man.model_account_spend,base.group_user,1,1,1,1
+ooh_expense_man.access_personal_goals,access_personal_goals,ooh_expense_man.model_personal_goals,base.group_user,1,1,1,1
+ooh_expense_man.access_advert_center,access_advert_center,ooh_expense_man.model_advert_center,base.group_user,1,1,1,1
+
+
