@@ -171,7 +171,6 @@ class JwtController(http.Controller):
                     'sub': partner['id'],
                     'lgn': partner['email'],
                     'name': partner['name'],
-                    'currency': partner.company_id.currency_id.name,
                     'phone': partner['phone'],
                 }
                 token = jwt.encode(payload, self.key(), algorithm='HS256')
@@ -182,6 +181,7 @@ class JwtController(http.Controller):
                     'user_name': partner.name,
                     'email': partner.email,
                     'user_id': partner.id,
+                    'currency': partner.company_id.currency_id.name,
                     'token_type': 'Bearer',
                     'access_token': token,
                     'code': 200
