@@ -181,7 +181,7 @@ class JwtController(http.Controller):
                     'user_name': partner.name,
                     'email': partner.email,
                     'user_id': partner.id,
-                    'currency': partner.curreny.symbol,
+                    'curreny_id': partner.curreny_id.symbol,
                     'token_type': 'Bearer',
                     'access_token': token,
                     'code': 200

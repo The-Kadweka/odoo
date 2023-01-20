@@ -10,7 +10,7 @@ class PartnerExtension(models.Model):
     access_token_ids = fields.One2many(string='Access Tokens',comodel_name='jwt_provider.access_token',inverse_name='partner_id')
     otp=fields.Char(string='Otp')
     when_sent=fields.Date(string="Otp Validation")  
-    curreny=fields.Many2one('res.currency',string="currency")  
+    curreny_id=fields.Many2one('res.currency',string="currency")  
     dob=fields.Date(string="dob")
     gender = fields.Selection([
         ('male', 'Male'),
