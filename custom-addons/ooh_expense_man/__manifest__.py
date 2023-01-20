@@ -1,7 +1,7 @@
 {
     'name': "Money Management",
     'summary': """This module will add a record to store student details""",
-    'version': '16.0',
+    'version': '15.0',
     'description': """This module will add a record to store student details""",
     'author': '@The-Kadweka',
     # 'company': 'Cybrosys Techno Solutions',

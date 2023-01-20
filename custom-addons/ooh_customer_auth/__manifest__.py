@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Ooh Custom Auth",
-    'version': "16.0",
+    'version': "15.0",
     'author': "@The-Kadweka",
     'category': "Tools",
     'support': "@The-Kadweka",
