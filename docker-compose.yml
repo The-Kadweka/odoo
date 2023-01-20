@@ -15,7 +15,7 @@ services:
         networks:
                 - kadweka
    odoo:
-        image: kadweka:odoo-16.0
+        image: kadweka:odoo-15.0
         restart: always
         ports:
                 - 8149:8069

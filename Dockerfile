@@ -1,4 +1,4 @@
-FROM odoo:16.0
+FROM odoo:15.0
 USER root
 ENV DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
 
