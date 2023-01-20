@@ -15,6 +15,20 @@ _logger = logging.getLogger(__name__)
 today = datetime.today()
 
 class MoneyController(http.Controller):
+    @http.route('/view/currency',type='json',auth="public",cors='*',method=['POST'])
+    def view_currency(self):
+        currencies=[]
+        currency = request.env['res.currency'].sudo().search([('active',"=",True)])
+        for rec in currency:
+            vals={
+                "value":rec.id,
+                "label":rec.name
+            }
+            currencies.append(vals)
+        return {
+            "code":200,
+            "currency":currencies
+        }
     @http.route('/view/goal/details',type='json',auth="public",cors='*',method=['POST'])
     def view_goal_details(self,**kw):
         data = json.loads(request.httprequest.data)
