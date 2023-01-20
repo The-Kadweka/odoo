@@ -611,8 +611,6 @@ class MoneyController(http.Controller):
     def new_expense(self, **kw):
         data = json.loads(request.httprequest.data)
         access_token = data['access_token']
-        _logger.error(data)
-        _logger.error('THE COMING PAYLOAD')
         name = data['name']
         amount = data['amt']
         spent_on = data['spent_on']
@@ -645,7 +643,7 @@ class MoneyController(http.Controller):
         if token:
             account_id = request.env['users.account'].sudo().search([('partner_id.email', '=',token.partner_id.email)])
             if account_id:
-                if spent_on.upper()== "INCOME":
+                if spent_on== "INCOME":
                     expense=request.env['account.spend'].sudo().create({
                     'name':name,
                     'amt':amount,
@@ -661,7 +659,7 @@ class MoneyController(http.Controller):
                             "type":data["spent_on"],
                             "message":"You have successfuly Created an Income"
                         }
-                if spent_on.upper()=="SAVINGS":
+                if spent_on=="SAVINGS":
                     if float(amount)>account_id.balance:
                         return {
                             "code":200,
@@ -681,6 +679,7 @@ class MoneyController(http.Controller):
                             })
                             if expense_id:
                                 goal_id.sudo().write({"current_saving":goal_id.current_saving+expense_id.amt})
+                                account_id.sudo().write({"balance":account_id.balance-expense_id.amt})
                                 return {
                                     "code":200,
                                     "status":"Successfuly",
