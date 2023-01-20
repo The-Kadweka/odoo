@@ -7,12 +7,11 @@ import random
 import json
 import math
 import jwt
-
+# bsA@VKV58-qJEB
 import logging
 
 _logger = logging.getLogger(__name__)
 today = datetime.date.today()
-
 SENSITIVE_FIELDS = ['password', 'password_crypt', 'new_password', 'create_uid', 'write_uid']
 
 
