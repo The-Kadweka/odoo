@@ -22,7 +22,7 @@ class MoneyController(http.Controller):
         for rec in currency:
             vals={
                 "value":rec.id,
-                "label":rec.name
+                "label":rec.symbol
             }
             currencies.append(vals)
         return {
