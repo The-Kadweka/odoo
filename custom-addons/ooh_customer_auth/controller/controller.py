@@ -446,24 +446,24 @@ class MoneyController(http.Controller):
                             households+=rec.amt
                     if rec.spent_on=="OTHERS":
                             others+=rec.amt
-                category.append({"name":"Others","amount":others})
-                category.append({"name":"Bill","amount":bill})
-                category.append({"name":"House Holds","amount":households})
-                category.append({"name":"Vacation","amount":vacation})
-                category.append({"name":"Transport","amount":transport})
-                category.append({"name":"Subscription","amount":subscription})
-                category.append({"name":"Renting","amount":rent})
-                category.append({"name":"Food/Groceries","amount":foodgroceries})
-                category.append({"name":"Income","amount":incomes})
-                category.append({"name":"Savings","amount":saves})
-                category.append({"name":"Entertainment","amount":entertainment})
-                category.append({"name":"Education","amount":education})
-                category.append({"name":"Electronics","amount":electronics})
-                category.append({"name":"Charity","amount":charity})
-                category.append({"name":"Clothing","amount":clothing})
-                agregades.append({"label":"Savings","amount":savings,"color":"orange"})
-                agregades.append({"label":"Spending","amount":spending,"color":"red"})
-                agregades.append({"label":"Income","amount":income,"color":"green"})
+                category.append({"name":"Others","amount":others,"per":round(others/income*100,2)})
+                category.append({"name":"Bill","amount":bill,"per":round(bill/income*100,2)})
+                category.append({"name":"House Holds","amount":households,"per":round(households/income*100,2)})
+                category.append({"name":"Vacation","amount":vacation,"per":round(vacation/income*100,2)})
+                category.append({"name":"Transport","amount":transport,"per":round(transport/income*100,2)})
+                category.append({"name":"Subscription","amount":subscription,"per":round(subscription/income*100,2)})
+                category.append({"name":"Renting","amount":rent,"per":round(rent/income*100,2)})
+                category.append({"name":"Food/Groceries","amount":foodgroceries,"per":round(foodgroceries/income*100,2)})
+                # category.append({"name":"Income","amount":incomes})
+                category.append({"name":"Savings","amount":saves,"per":round(saves/income*100,2)})
+                category.append({"name":"Entertainment","amount":entertainment,"per":round(entertainment/income*100,2)})
+                category.append({"name":"Education","amount":education,"per":round(education/income*100,2)})
+                category.append({"name":"Electronics","amount":electronics,"per":round(electronics/income*100,2)})
+                category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
+                category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
+                # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
+                agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
+
 
                 return{
                     "code":200,
@@ -475,7 +475,6 @@ class MoneyController(http.Controller):
                     "balance":account_id.balance,
                     "Message":"Customer Transactions"
                 }
-
             if data['period']=="thisMonth":
                 expenses=account_id.sudo().search([('partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses.expenditure:
@@ -516,24 +515,24 @@ class MoneyController(http.Controller):
                             households+=rec.amt
                     if rec.spent_on=="OTHERS"  and rec.date.month==today.month:
                             others+=rec.amt
-                category.append({"name":"Others","amount":others})
-                category.append({"name":"Bill","amount":bill})
-                category.append({"name":"House Holds","amount":households})
-                category.append({"name":"Vacation","amount":vacation})
-                category.append({"name":"Transport","amount":transport})
-                category.append({"name":"Subscription","amount":subscription})
-                category.append({"name":"Renting","amount":rent})
-                category.append({"name":"Food/Groceries","amount":foodgroceries})
-                category.append({"name":"Income","amount":incomes})
-                category.append({"name":"Savings","amount":saves})
-                category.append({"name":"Entertainment","amount":entertainment})
-                category.append({"name":"Education","amount":education})
-                category.append({"name":"Electronics","amount":electronics})
-                category.append({"name":"Charity","amount":charity})
-                category.append({"name":"Clothing","amount":clothing})
-                agregades.append({"label":"Savings","amount":savings,"color":"orange"})
-                agregades.append({"label":"Spending","amount":spending,"color":"red"})
-                agregades.append({"label":"Income","amount":income,"color":"green"})
+                category.append({"name":"Others","amount":others,"per":round(others/income*100,2)})
+                category.append({"name":"Bill","amount":bill,"per":round(bill/income*100,2)})
+                category.append({"name":"House Holds","amount":households,"per":round(households/income*100,2)})
+                category.append({"name":"Vacation","amount":vacation,"per":round(vacation/income*100,2)})
+                category.append({"name":"Transport","amount":transport,"per":round(transport/income*100,2)})
+                category.append({"name":"Subscription","amount":subscription,"per":round(subscription/income*100,2)})
+                category.append({"name":"Renting","amount":rent,"per":round(rent/income*100,2)})
+                category.append({"name":"Food/Groceries","amount":foodgroceries,"per":round(foodgroceries/income*100,2)})
+                # category.append({"name":"Income","amount":incomes})
+                category.append({"name":"Savings","amount":saves,"per":round(saves/income*100,2)})
+                category.append({"name":"Entertainment","amount":entertainment,"per":round(entertainment/income*100,2)})
+                category.append({"name":"Education","amount":education,"per":round(education/income*100,2)})
+                category.append({"name":"Electronics","amount":electronics,"per":round(electronics/income*100,2)})
+                category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
+                category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
+                # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
+                agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
+
 
                 return{
                     "code":200,
@@ -586,24 +585,23 @@ class MoneyController(http.Controller):
                             households+=rec.amt
                     if rec.spent_on=="OTHERS":
                             others+=rec.amt
-                category.append({"name":"Others","amount":others})
-                category.append({"name":"Bill","amount":bill})
-                category.append({"name":"House Holds","amount":households})
-                category.append({"name":"Vacation","amount":vacation})
-                category.append({"name":"Transport","amount":transport})
-                category.append({"name":"Subscription","amount":subscription})
-                category.append({"name":"Renting","amount":rent})
-                category.append({"name":"Food/Groceries","amount":foodgroceries})
-                category.append({"name":"Income","amount":incomes})
-                category.append({"name":"Savings","amount":saves})
-                category.append({"name":"Entertainment","amount":entertainment})
-                category.append({"name":"Education","amount":education})
-                category.append({"name":"Electronics","amount":electronics})
-                category.append({"name":"Charity","amount":charity})
-                category.append({"name":"Clothing","amount":clothing})
-                agregades.append({"label":"Savings","amount":savings,"color":"orange"})
-                agregades.append({"label":"Spending","amount":spending,"color":"red"})
-                agregades.append({"label":"Income","amount":income,"color":"green"})
+                category.append({"name":"Others","amount":others,"per":round(others/income*100,2)})
+                category.append({"name":"Bill","amount":bill,"per":round(bill/income*100,2)})
+                category.append({"name":"House Holds","amount":households,"per":round(households/income*100,2)})
+                category.append({"name":"Vacation","amount":vacation,"per":round(vacation/income*100,2)})
+                category.append({"name":"Transport","amount":transport,"per":round(transport/income*100,2)})
+                category.append({"name":"Subscription","amount":subscription,"per":round(subscription/income*100,2)})
+                category.append({"name":"Renting","amount":rent,"per":round(rent/income*100,2)})
+                category.append({"name":"Food/Groceries","amount":foodgroceries,"per":round(foodgroceries/income*100,2)})
+                # category.append({"name":"Income","amount":incomes})
+                category.append({"name":"Savings","amount":saves,"per":round(saves/income*100,2)})
+                category.append({"name":"Entertainment","amount":entertainment,"per":round(entertainment/income*100,2)})
+                category.append({"name":"Education","amount":education,"per":round(education/income*100,2)})
+                category.append({"name":"Electronics","amount":electronics,"per":round(electronics/income*100,2)})
+                category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
+                category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
+                # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
+                agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
 
                 return{
                     "code":200,
