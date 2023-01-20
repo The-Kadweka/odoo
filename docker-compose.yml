@@ -15,10 +15,10 @@ services:
         networks:
                 - kadweka
    odoo:
-        image: kadweka:odoo-15.0
+        image: kadweka:odoo-16.0
         restart: always
         ports:
-                - 8069:8069
+                - 8149:8069
                 - 8072:8072
         links:
                 - db:db
@@ -29,19 +29,19 @@ services:
                 - odoo-data:/var/lib/odoo
         networks:
                 - kadweka
-   nginx:
-        image: nginx:latest
-        ports:
-                - 80:80
-                - 443:443
-        restart: always
-        depends_on:
-                - odoo
-        volumes:
-                - ./nginx/sites-enabled/:/etc/nginx/conf.d:ro
-                # - /etc/letsencrypt:/etc/letsencrypt:ro
-        networks:
-                - kadweka
+#    nginx:
+#         image: nginx:latest
+#         ports:
+#                 - 80:80
+#                 - 443:443
+#         restart: always
+#         depends_on:
+#                 - odoo
+#         volumes:
+#                 - ./nginx/sites-enabled/:/etc/nginx/conf.d:ro
+#                 # - /etc/letsencrypt:/etc/letsencrypt:ro
+#         networks:
+#                 - kadweka
 volumes:
         odoo-data:
         db-data:

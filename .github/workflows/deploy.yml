@@ -16,9 +16,9 @@ jobs:
           port: ${{secrets.SSH_PORT}} # SSH server port
           script_stop: true # Will stop build incase of any failures
           script: |
-            cd /home/odoo/odoo
+            cd /ubuntu/odoo
             git pull origin main
-            docker build -t kadweka:odoo-15.0 .
+            docker build -t kadweka:odoo-16.0 .
             docker-compose down
             docker-compose up -d
             docker system prune -f
