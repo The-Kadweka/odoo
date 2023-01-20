@@ -172,7 +172,7 @@ class JwtController(http.Controller):
                     'sub': partner['id'],
                     'lgn': partner['email'],
                     'name': partner['name'],
-                    'name': partner.company_id.currency_id.name,
+                    'currency': partner.company_id.currency_id.name,
                     'phone': partner['phone'],
                 }
                 token = jwt.encode(payload, self.key(), algorithm='HS256')
