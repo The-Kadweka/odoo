@@ -39,9 +39,9 @@ class MoneyController(http.Controller):
             goal_id_data= request.env['personal.goals'].sudo().search([('id','=',data['goal_id']),('partner_id.email', '=',token.partner_id.email)])
             if goal_id_data:
                 for rec in goal_id_data.expense_id:
-                    start_date = datetime.strptime(str(goal_id_data.from_date), "%Y-%m-%d")
-                    end_date = datetime.strptime(str(goal_id_data.to_date), "%Y-%m-%d")
-                    delta = relativedelta(end_date, start_date)
+                    # start_date = datetime.strptime(str(goal_id_data.from_date), "%Y-%m-%d")
+                    # end_date = datetime.strptime(str(goal_id_data.to_date), "%Y-%m-%d")
+                    # delta = relativedelta(end_date, start_date)
                     lines={
                     "id":rec.id,
                     "date":rec.date,
@@ -55,7 +55,7 @@ class MoneyController(http.Controller):
                     "name":goal_id_data.name,
                     "start":goal_id_data.from_date,
                     "end":goal_id_data.to_date,
-                    "period":delta.months,
+                    "period":relativedelta(datetime.strptime(str(goal_id_data.to_date), "%Y-%m-%d"), datetime.strptime(str(goal_id_data.from_date), "%Y-%m-%d")).months,
                     "start_amt":goal_id_data.target,
                     "saved_amount":goal_id_data.current_saving,
                     "lines":linesData,
