@@ -411,9 +411,7 @@ class MoneyController(http.Controller):
                 for rec in expenses.expenditure:
                     if rec.spent_on=="INCOME":
                         income+=rec.amt
-                    if rec.spent_on=="SAVINGS":
-                        savings+=rec.amt
-                    if rec.spent_on not in ["INCOME","SAVINGS"]:
+                    if rec.spent_on not in ["INCOME"]:
                         spending+=rec.amt
                 for rec in expenses.expenditure:
                     if rec.spent_on=="BILL":
@@ -454,7 +452,6 @@ class MoneyController(http.Controller):
                 category.append({"name":"Subscription","amount":subscription,"per":round(subscription/income*100,2)})
                 category.append({"name":"Renting","amount":rent,"per":round(rent/income*100,2)})
                 category.append({"name":"Food/Groceries","amount":foodgroceries,"per":round(foodgroceries/income*100,2)})
-                # category.append({"name":"Income","amount":incomes})
                 category.append({"name":"Savings","amount":saves,"per":round(saves/income*100,2)})
                 category.append({"name":"Entertainment","amount":entertainment,"per":round(entertainment/income*100,2)})
                 category.append({"name":"Education","amount":education,"per":round(education/income*100,2)})
@@ -462,14 +459,13 @@ class MoneyController(http.Controller):
                 category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
                 category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
                 # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
-                agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
+                # agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
+                # category.append({"name":"Income","amount":incomes})
 
 
                 return{
                     "code":200,
                     "status":"successfuly",
-                    "Income":incomes,
-                    "Savings":saves,
                     "expense":spending,
                     "category":category,
                     "balance":account_id.balance,
@@ -480,9 +476,9 @@ class MoneyController(http.Controller):
                 for rec in expenses.expenditure:
                     if rec.spent_on=="INCOME" and rec.date.month==today.month:
                         income+=rec.amt
-                    if rec.spent_on=="SAVINGS" and rec.date.month==today.month:
-                        savings+=rec.amt
-                    if rec.spent_on not in ["INCOME","SAVINGS"] and rec.date.month==today.month:
+                    # if rec.spent_on=="SAVINGS" and rec.date.month==today.month:
+                    #     savings+=rec.amt
+                    if rec.spent_on not in ["INCOME"] and rec.date.month==today.month:
                         spending+=rec.amt
                 for rec in expenses.expenditure:
                     if rec.spent_on=="BILL" and rec.date.month==today.month:
@@ -531,14 +527,14 @@ class MoneyController(http.Controller):
                 category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
                 category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
                 # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
-                agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
+                # agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
 
 
                 return{
                     "code":200,
                     "status":"successfuly",
-                    "Income":incomes,
-                    "Savings":saves,
+                    # "Income":incomes,
+                    # "Savings":saves,
                     "expense":spending,
                     "category":category,
                     "balance":account_id.balance,
@@ -550,9 +546,9 @@ class MoneyController(http.Controller):
                 for rec in expenses.expenditure:
                     if rec.spent_on=="INCOME":
                         income+=rec.amt
-                    if rec.spent_on=="SAVINGS":
-                        savings+=rec.amt
-                    if rec.spent_on not in ["INCOME","SAVINGS"]:
+                    # if rec.spent_on=="SAVINGS":
+                    #     savings+=rec.amt
+                    if rec.spent_on not in ["INCOME"]:
                         spending+=rec.amt
                 for rec in expenses.expenditure:
                     if rec.spent_on=="BILL":
@@ -593,7 +589,6 @@ class MoneyController(http.Controller):
                 category.append({"name":"Subscription","amount":subscription,"per":round(subscription/income*100,2)})
                 category.append({"name":"Renting","amount":rent,"per":round(rent/income*100,2)})
                 category.append({"name":"Food/Groceries","amount":foodgroceries,"per":round(foodgroceries/income*100,2)})
-                # category.append({"name":"Income","amount":incomes})
                 category.append({"name":"Savings","amount":saves,"per":round(saves/income*100,2)})
                 category.append({"name":"Entertainment","amount":entertainment,"per":round(entertainment/income*100,2)})
                 category.append({"name":"Education","amount":education,"per":round(education/income*100,2)})
@@ -601,13 +596,14 @@ class MoneyController(http.Controller):
                 category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
                 category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
                 # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
-                agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
+                # agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
+                # category.append({"name":"Income","amount":incomes})
 
                 return{
                     "code":200,
                     "status":"successfuly",
-                    "Income":incomes,
-                    "Savings":saves,
+                    # "Income":incomes,
+                    # "Savings":saves,
                     "expense":spending,
                     "category":category,
                     "balance":account_id.balance,
