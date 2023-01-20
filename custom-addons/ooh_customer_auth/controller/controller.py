@@ -124,7 +124,7 @@ class MoneyController(http.Controller):
             return response
         token = request.env['jwt_provider.access_token'].sudo().search([('is_expired', '!=',True),('token', '=',access_token)])
         if token:
-            goal_id=request.env['personal.goals'].sudo().search([('id','=',goal_id),('partner_id.id','=',token.artner_id.id)])
+            goal_id=request.env['personal.goals'].sudo().search([('id','=',goal_id),('partner_id.id','=',token.partner_id.id)])
             if len(goal_id.expense_id)>0:
                 response = {
                 'code': 403,
