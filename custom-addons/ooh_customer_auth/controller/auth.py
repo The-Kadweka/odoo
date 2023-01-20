@@ -181,7 +181,7 @@ class JwtController(http.Controller):
                     'user_name': partner.name,
                     'email': partner.email,
                     'user_id': partner.id,
-                    'currency': partner.company_id.currency_id.name,
+                    'currency': partner.curreny.name,
                     'token_type': 'Bearer',
                     'access_token': token,
                     'code': 200
@@ -302,15 +302,15 @@ class JwtController(http.Controller):
         password = generate_password_hash(data['password'], method='sha256')
         data['password'] = password
         name = data['name']
-        # dob = data['dob']
+        curreny_id = data['curreny_id']
         # gender = data['gender']
         phone = data['phone']
-        # if not gender:
-        #     response = {
-        #         'code': 422,
-        #         'message': 'Ge cannot be empty'
-        #     }
-        #     return response
+        if not curreny_id:
+            response = {
+                'code': 422,
+                'message': 'Currency cannot be empty'
+            }
+            return response
         if not email:
             response = {
                 'code': 422,
@@ -358,7 +358,7 @@ class JwtController(http.Controller):
             'phone':phone,
             'name':name,
             "dob":today,
-            # "gender":""
+            "curreny_id":curreny_id,
             'password':password
         })
         if partner:
