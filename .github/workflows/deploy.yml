@@ -18,7 +18,7 @@ jobs:
           script: |
             cd /home/ubuntu/odoo
             git pull origin main
-            docker build -t kadweka:odoo-15.0 .
+            docker build -t kadweka:odoo:16.0 .
             docker-compose down
             docker-compose up -d
             docker system prune -f
