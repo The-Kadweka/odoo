@@ -384,12 +384,12 @@ class MoneyController(http.Controller):
         clothing=0.00
         electronics=0.00
         income=0.00
-        savings=0.00
         spending=0.00
         education=0.00
         entertainment=0.00
         foodgroceries=0.00
         rent=0.00
+        meds=0.00
         subscription=0.00
         transport=0.00
         vacation=0.00
@@ -404,16 +404,15 @@ class MoneyController(http.Controller):
             }
             return response
         token = request.env['jwt_provider.access_token'].sudo().search([('is_expired', '!=',True),('token', '=',access_token)])
-        account_id= request.env['users.account']
+        account_id= request.env['users.account'].sudo().search([('partner_id.email', '=',token.partner_id.email)])
         if token:
             if data['period']=="Today":
-                expenses=account_id.sudo().search([("expenditure.date","=",today),('partner_id.email', '=',token.partner_id.email)])
-                for rec in expenses.expenditure:
+                expenses=account_id.expenditure.sudo().search([("date","=",today)])
+                for rec in expenses:
                     if rec.spent_on=="INCOME":
                         income+=rec.amt
                     if rec.spent_on not in ["INCOME"]:
                         spending+=rec.amt
-                for rec in expenses.expenditure:
                     if rec.spent_on=="BILL":
                         bill+=rec.amt
                     if rec.spent_on=="CHARITY":
@@ -444,23 +443,23 @@ class MoneyController(http.Controller):
                             households+=rec.amt
                     if rec.spent_on=="OTHERS":
                             others+=rec.amt
-                category.append({"name":"Others","amount":others,"per":round(others/income*100,2)})
-                category.append({"name":"Bill","amount":bill,"per":round(bill/income*100,2)})
-                category.append({"name":"House Holds","amount":households,"per":round(households/income*100,2)})
-                category.append({"name":"Vacation","amount":vacation,"per":round(vacation/income*100,2)})
-                category.append({"name":"Transport","amount":transport,"per":round(transport/income*100,2)})
-                category.append({"name":"Subscription","amount":subscription,"per":round(subscription/income*100,2)})
-                category.append({"name":"Renting","amount":rent,"per":round(rent/income*100,2)})
-                category.append({"name":"Food/Groceries","amount":foodgroceries,"per":round(foodgroceries/income*100,2)})
-                category.append({"name":"Savings","amount":saves,"per":round(saves/income*100,2)})
-                category.append({"name":"Entertainment","amount":entertainment,"per":round(entertainment/income*100,2)})
-                category.append({"name":"Education","amount":education,"per":round(education/income*100,2)})
-                category.append({"name":"Electronics","amount":electronics,"per":round(electronics/income*100,2)})
-                category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
-                category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
-                # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
-                # agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
-                # category.append({"name":"Income","amount":incomes})
+                    if rec.spent_on=="MEDICATIONS":
+                            meds+=rec.amt
+                category.append({"name":"Others","amount":round(others,2),"per":round(others/income*100,1)})
+                category.append({"name":"Bill","amount":round(bill,2),"per":round(bill/income*100,1)})
+                category.append({"name":"House Holds","amount":round(households,2),"per":round(households/income*100,1)})
+                category.append({"name":"Vacation","amount":round(vacation,2),"per":round(vacation/income*100,1)})
+                category.append({"name":"Transport","amount":round(transport,2),"per":round(transport/income*100,1)})
+                category.append({"name":"Subscription","amount":round(subscription,2),"per":round(subscription/income*100,1)})
+                category.append({"name":"Renting","amount":round(rent,2),"per":round(rent/income*100,1)})
+                category.append({"name":"Food/Groceries","amount":round(foodgroceries,2),"per":round(foodgroceries/income*100,1)})
+                category.append({"name":"Savings","amount":round(saves,2),"per":round(saves/income*100,1)})
+                category.append({"name":"Entertainment","amount":round(entertainment,2),"per":round(entertainment/income*100,1)})
+                category.append({"name":"Education","amount":round(education,2),"per":round(education/income*100,1)})
+                category.append({"name":"Electronics","amount":round(electronics,3),"per":round(electronics/income*100,1)})
+                category.append({"name":"Charity","amount":round(charity,2),"per":round(charity/income*100,1)})
+                category.append({"name":"Clothing","amount":round(clothing,2),"per":round(clothing/income*100,1)})
+                agregades.append({"label":"Medication","amount":(meds,2),"per":round(meds/income*100,1)})
 
 
                 return{
@@ -472,15 +471,12 @@ class MoneyController(http.Controller):
                     "Message":"Customer Transactions"
                 }
             if data['period']=="thisMonth":
-                expenses=account_id.sudo().search([('partner_id.email', '=',token.partner_id.email)])
-                for rec in expenses.expenditure:
+                expenses=account_id.expenditure.sudo().search([('account_id.partner_id.email', '=',token.partner_id.email)])
+                for rec in expenses:
                     if rec.spent_on=="INCOME" and rec.date.month==today.month:
                         income+=rec.amt
-                    # if rec.spent_on=="SAVINGS" and rec.date.month==today.month:
-                    #     savings+=rec.amt
                     if rec.spent_on not in ["INCOME"] and rec.date.month==today.month:
                         spending+=rec.amt
-                for rec in expenses.expenditure:
                     if rec.spent_on=="BILL" and rec.date.month==today.month:
                         bill+=rec.amt
                     if rec.spent_on=="CHARITY" and rec.date.month==today.month:
@@ -501,8 +497,6 @@ class MoneyController(http.Controller):
                             subscription+=rec.amt
                     if rec.spent_on=="TRANSPORT" and rec.date.month==today.month:
                             transport+=rec.amt
-                    if rec.spent_on=="INCOME"  and rec.date.month==today.month:
-                            incomes+=rec.amt
                     if rec.spent_on=="SAVINGS"  and rec.date.month==today.month:
                             saves+=rec.amt
                     if rec.spent_on=="VACATIONS"  and rec.date.month==today.month:
@@ -511,24 +505,23 @@ class MoneyController(http.Controller):
                             households+=rec.amt
                     if rec.spent_on=="OTHERS"  and rec.date.month==today.month:
                             others+=rec.amt
-                category.append({"name":"Others","amount":others,"per":round(others/income*100,2)})
-                category.append({"name":"Bill","amount":bill,"per":round(bill/income*100,2)})
-                category.append({"name":"House Holds","amount":households,"per":round(households/income*100,2)})
-                category.append({"name":"Vacation","amount":vacation,"per":round(vacation/income*100,2)})
-                category.append({"name":"Transport","amount":transport,"per":round(transport/income*100,2)})
-                category.append({"name":"Subscription","amount":subscription,"per":round(subscription/income*100,2)})
-                category.append({"name":"Renting","amount":rent,"per":round(rent/income*100,2)})
-                category.append({"name":"Food/Groceries","amount":foodgroceries,"per":round(foodgroceries/income*100,2)})
-                # category.append({"name":"Income","amount":incomes})
-                category.append({"name":"Savings","amount":saves,"per":round(saves/income*100,2)})
-                category.append({"name":"Entertainment","amount":entertainment,"per":round(entertainment/income*100,2)})
-                category.append({"name":"Education","amount":education,"per":round(education/income*100,2)})
-                category.append({"name":"Electronics","amount":electronics,"per":round(electronics/income*100,2)})
-                category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
-                category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
-                # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
-                # agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
-
+                    if rec.spent_on=="MEDICATIONS" and  rec.date.month==today.month:
+                            meds+=rec.amt
+                category.append({"name":"Others","amount":round(others,2),"per":round(others/income*100,1)})
+                category.append({"name":"Bill","amount":round(bill,2),"per":round(bill/income*100,1)})
+                category.append({"name":"House Holds","amount":round(households,2),"per":round(households/income*100,1)})
+                category.append({"name":"Vacation","amount":round(vacation,2),"per":round(vacation/income*100,1)})
+                category.append({"name":"Transport","amount":round(transport,2),"per":round(transport/income*100,1)})
+                category.append({"name":"Subscription","amount":round(subscription,2),"per":round(subscription/income*100,1)})
+                category.append({"name":"Renting","amount":round(rent,2),"per":round(rent/income*100,1)})
+                category.append({"name":"Food/Groceries","amount":round(foodgroceries,2),"per":round(foodgroceries/income*100,1)})
+                category.append({"name":"Savings","amount":round(saves,2),"per":round(saves/income*100,1)})
+                category.append({"name":"Entertainment","amount":round(entertainment,2),"per":round(entertainment/income*100,1)})
+                category.append({"name":"Education","amount":round(education,2),"per":round(education/income*100,1)})
+                category.append({"name":"Electronics","amount":round(electronics,3),"per":round(electronics/income*100,1)})
+                category.append({"name":"Charity","amount":round(charity,2),"per":round(charity/income*100,1)})
+                category.append({"name":"Clothing","amount":round(clothing,2),"per":round(clothing/income*100,1)})
+                agregades.append({"label":"Medication","amount":(meds,2),"per":round(meds/income*100,1)})
 
                 return{
                     "code":200,
@@ -541,18 +534,18 @@ class MoneyController(http.Controller):
                     "Message":"Customer Transactions"
                 }
             if data['period']=="past6Month":
-                six_months = date.today() + relativedelta(months=-6)
-                expenses=account_id.sudo().search([("expenditure.date",">",six_months),("expenditure.date","<",today),('partner_id.email', '=',token.partner_id.email)])
-                for rec in expenses.expenditure:
-                    if rec.spent_on=="INCOME":
-                        income+=rec.amt
-                    # if rec.spent_on=="SAVINGS":
-                    #     savings+=rec.amt
-                    if rec.spent_on not in ["INCOME"]:
-                        spending+=rec.amt
-                for rec in expenses.expenditure:
+                date_6_ago = (date.today() + relativedelta(months=-6))
+                _logger.error(date_6_ago)
+                _logger.error(today)
+                _logger.error("TESTING THE VALUES OF DATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                expenses=account_id.expenditure.sudo().search([("date",">=",date_6_ago),("date","<=",today),('account_id.partner_id.email', '=',token.partner_id.email)])
+                for rec in expenses:
                     if rec.spent_on=="BILL":
                         bill+=rec.amt
+                    if rec.spent_on=="INCOME":
+                        income+=rec.amt
+                    if rec.spent_on not in ["INCOME"]:
+                        spending+=rec.amt
                     if rec.spent_on=="CHARITY":
                         charity+=rec.amt
                     if rec.spent_on=="CLOTHING":
@@ -581,29 +574,26 @@ class MoneyController(http.Controller):
                             households+=rec.amt
                     if rec.spent_on=="OTHERS":
                             others+=rec.amt
-                category.append({"name":"Others","amount":others,"per":round(others/income*100,2)})
-                category.append({"name":"Bill","amount":bill,"per":round(bill/income*100,2)})
-                category.append({"name":"House Holds","amount":households,"per":round(households/income*100,2)})
-                category.append({"name":"Vacation","amount":vacation,"per":round(vacation/income*100,2)})
-                category.append({"name":"Transport","amount":transport,"per":round(transport/income*100,2)})
-                category.append({"name":"Subscription","amount":subscription,"per":round(subscription/income*100,2)})
-                category.append({"name":"Renting","amount":rent,"per":round(rent/income*100,2)})
-                category.append({"name":"Food/Groceries","amount":foodgroceries,"per":round(foodgroceries/income*100,2)})
-                category.append({"name":"Savings","amount":saves,"per":round(saves/income*100,2)})
-                category.append({"name":"Entertainment","amount":entertainment,"per":round(entertainment/income*100,2)})
-                category.append({"name":"Education","amount":education,"per":round(education/income*100,2)})
-                category.append({"name":"Electronics","amount":electronics,"per":round(electronics/income*100,2)})
-                category.append({"name":"Charity","amount":charity,"per":round(charity/income*100,2)})
-                category.append({"name":"Clothing","amount":clothing,"per":round(clothing/income*100,2)})
-                # agregades.append({"label":"Savings","amount":savings,"color":"orange","per":round(savings/income*100,2)})
-                # agregades.append({"label":"Spending","amount":spending,"color":"red","per":round(others/income*100,2)})
-                # category.append({"name":"Income","amount":incomes})
-
+                    if rec.spent_on=="MEDICATIONS":
+                            meds+=rec.amt
+                category.append({"name":"Others","amount":round(others,2) if others>0 else round(0.00),"per":round(others/income*100,1) if others>0 else round(0.00)})
+                category.append({"name":"Bill","amount":round(bill,2) if bill>0 else round(0.00),"per":round(bill/income*100,1)if bill>0 else round(0.00) })
+                category.append({"name":"House Holds","amount":round(households,2) if households>0 else round(0.00),"per":round(households/income*100,1) if households>0 else round(0.00)})
+                category.append({"name":"Vacation","amount":round(vacation,2) if vacation>0 else round(0.00),"per":round(vacation/income*100,1) if households>0 else round(0.00) })
+                category.append({"name":"Transport","amount":round(transport,2) if transport>0 else round(0.00),"per":round(transport/income*100,1) if transport>0 else round(0.00)})
+                category.append({"name":"Subscription","amount":round(subscription,2) if subscription>0 else round(0.00),"per":round(subscription/income*100,1) if subscription>0 else round(0.00)})
+                category.append({"name":"Renting","amount":round(rent,2) if rent>0 else round(0.00),"per":round(rent/income*100,1) if rent>0 else round(0.00)})
+                category.append({"name":"Food/Groceries","amount":round(foodgroceries,2) if foodgroceries>0 else round(0.00),"per":round(foodgroceries/income*100,1) if foodgroceries>0 else round(0.00)})
+                category.append({"name":"Savings","amount":round(saves,2) if saves>0 else round(0.00),"per":round(saves/income*100,1) if saves>0 else round(0.00)})
+                category.append({"name":"Entertainment","amount":round(entertainment,2) if entertainment>0 else round(0.00),"per":round(entertainment/income*100,1) if entertainment>0 else round(0.00)})
+                category.append({"name":"Education","amount":round(education,2) if education>0 else round(0.00),"per":round(education/income*100,1) if education>0 else round(0.00)})
+                category.append({"name":"Electronics","amount":round(electronics,3) if electronics>0 else round(0.00),"per":round(electronics/income*100,1) if electronics>0 else round(0.00)})
+                category.append({"name":"Charity","amount":round(charity,2) if charity>0 else round(0.00),"per":round(charity/income*100,1) if charity>0 else round(0.00)})
+                category.append({"name":"Clothing","amount":round(clothing,2) if clothing>0 else round(0.00),"per":round(clothing/income*100,1) if clothing>0 else round(0.00)})
+                agregades.append({"label":"Medication","amount":(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
                 return{
                     "code":200,
                     "status":"successfuly",
-                    # "Income":incomes,
-                    # "Savings":saves,
                     "expense":spending,
                     "category":category,
                     "balance":account_id.balance,
