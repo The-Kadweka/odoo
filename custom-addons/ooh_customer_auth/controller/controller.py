@@ -73,6 +73,7 @@ class MoneyController(http.Controller):
                     "start_amt":goal_id_data.target,
                     "saved_amount":goal_id_data.current_saving,
                     "lines":linesData,
+                    "len":len(linesData)
                 }
         else:
             response = {
@@ -366,6 +367,7 @@ class MoneyController(http.Controller):
                 "code":200,
                 "status":"successfuly",
                 "transactions":transactions,
+                "len":len(transactions),
                 "category":category,
                 "balance":account_id.balance,
                 "Message":"Customer Transactions"
