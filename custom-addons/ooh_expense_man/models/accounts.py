@@ -43,6 +43,7 @@ class AccountsSpent(models.Model):
         ('ENTERTAINMENT', 'ENTERTAINMENT'),
         ('PERSONALGOALS', 'PERSONAL GOALS'),
         ('FOODGROCERIES', 'FOOD/GROCERIES'),
+        ('MEDICATIONS', 'MEDICATIONS'),
         ('RENT', 'RENT'),
         ('SUBSCRIPTION', 'SUBSCRIPTIONS'),
         ('TRANSPORT', 'TRANSPORT'),
