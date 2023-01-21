@@ -459,7 +459,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Electronics","amount":round(electronics,3) if electronics>0 else round(0.00),"per":round(electronics/income*100,1) if electronics>0 else round(0.00)})
                 category.append({"name":"Charity","amount":round(charity,2) if charity>0 else round(0.00),"per":round(charity/income*100,1) if charity>0 else round(0.00)})
                 category.append({"name":"Clothing","amount":round(clothing,2) if clothing>0 else round(0.00),"per":round(clothing/income*100,1) if clothing>0 else round(0.00)})
-                agregades.append({"label":"Medication","amount":(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
+                category.append({"name":"Medication","amount":(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
 
                 return{
                     "code":200,
@@ -520,7 +520,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Electronics","amount":round(electronics,3) if electronics>0 else round(0.00),"per":round(electronics/income*100,1) if electronics>0 else round(0.00)})
                 category.append({"name":"Charity","amount":round(charity,2) if charity>0 else round(0.00),"per":round(charity/income*100,1) if charity>0 else round(0.00)})
                 category.append({"name":"Clothing","amount":round(clothing,2) if clothing>0 else round(0.00),"per":round(clothing/income*100,1) if clothing>0 else round(0.00)})
-                agregades.append({"label":"Medication","amount":(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
+                category.append({"name":"Medication","amount":(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
                 return{
                     "code":200,
                     "status":"successfuly",
@@ -586,7 +586,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Electronics","amount":round(electronics,3) if electronics>0 else round(0.00),"per":round(electronics/income*100,1) if electronics>0 else round(0.00)})
                 category.append({"name":"Charity","amount":round(charity,2) if charity>0 else round(0.00),"per":round(charity/income*100,1) if charity>0 else round(0.00)})
                 category.append({"name":"Clothing","amount":round(clothing,2) if clothing>0 else round(0.00),"per":round(clothing/income*100,1) if clothing>0 else round(0.00)})
-                agregades.append({"label":"Medication","amount":(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
+                category.append({"name":"Medication","amount":(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
                 return{
                     "code":200,
                     "status":"successfuly",
