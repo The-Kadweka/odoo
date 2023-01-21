@@ -292,6 +292,7 @@ class MoneyController(http.Controller):
         vacation=0.00
         households=0.00
         others=0.00
+        meds=0.00
         income=0.00
         savings=0.00
         if not access_token:
@@ -343,22 +344,24 @@ class MoneyController(http.Controller):
                         households+=rec.amt
                 if rec.spent_on=="OTHERS":
                         others+=rec.amt
-            category.append({"name":"Others","amount":others})
-            category.append({"name":"Bill","amount":bill})
-            category.append({"name":"House Holds","amount":households})
-            category.append({"name":"Vacation","amount":vacation})
-            category.append({"name":"Transport","amount":transport})
-            category.append({"name":"Subscription","amount":subscription})
-            category.append({"name":"Savings","amount":savings})
-            category.append({"name":"Renting","amount":rent})
-            category.append({"name":"Food/Groceries","amount":foodgroceries})
-            category.append({"name":"Entertainment","amount":entertainment})
-            category.append({"name":"Income","amount":income})
-            category.append({"name":"Education","amount":education})
-            category.append({"name":"Electronics","amount":electronics})
-            category.append({"name":"Charity","amount":charity})
-            category.append({"name":"Clothing","amount":clothing})
-
+                if rec.spent_on=="MEDICATIONS":
+                        meds+=rec.amt
+            category.append({"name":"Others","amount":round(others,2)})
+            category.append({"name":"Bill","amount":round(bill,2)})
+            category.append({"name":"House Holds","amount":round(households,2)})
+            category.append({"name":"Vacation","amount":round(vacation,2)})
+            category.append({"name":"Transport","amount":round(transport,2)})
+            category.append({"name":"Subscription","amount":round(subscription,2)})
+            category.append({"name":"Savings","amount":round(savings,2)})
+            category.append({"name":"Renting","amount":round(rent,2)})
+            category.append({"name":"Food/Groceries","amount":round(foodgroceries,2)})
+            category.append({"name":"Entertainment","amount":round(entertainment,2)})
+            category.append({"name":"Income","amount":round(income,2)})
+            category.append({"name":"Education","amount":round(education,2)})
+            category.append({"name":"Electronics","amount":round(electronics,2)})
+            category.append({"name":"Charity","amount":round(charity,2)})
+            category.append({"name":"Clothing","amount":round(clothing,2)})
+            category.append({"name":"Medication","amount":round(meds,2)})
             return{
                 "code":200,
                 "status":"successfuly",
