@@ -412,11 +412,11 @@ class MoneyController(http.Controller):
         account_id= request.env['users.account'].sudo().search([('partner_id.email', '=',token.partner_id.email)])
         if token:
             if data['period']=="Today":
-                expenses=account_id.expenditure.sudo().search([("date","=",today)])
+                expenses=account_id.expenditure.sudo().search([("date","=",today),('account_id.partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses:
                     if rec.spent_on=="INCOME":
                         income+=rec.amt
-                    if rec.spent_on not in ["INCOME"]:
+                    if rec.spent_on !="INCOME":
                         spending+=rec.amt
                     if rec.spent_on=="BILL":
                         bill+=rec.amt
