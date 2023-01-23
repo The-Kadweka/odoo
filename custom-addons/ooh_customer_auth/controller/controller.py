@@ -286,7 +286,7 @@ class MoneyController(http.Controller):
         income=0.00
         education=0.00
         entertainment=0.00
-        foodgroceries=0.00
+        shopping=0.00
         rent=0.00
         subscription=0.00
         transport=0.00
@@ -331,8 +331,8 @@ class MoneyController(http.Controller):
                     education+=rec.amt
                 if rec.spent_on=="ENTERTAINMENT":
                         entertainment+=rec.amt
-                if rec.spent_on=="FOODGROCERIES":
-                    foodgroceries+=rec.amt
+                if rec.spent_on=="shopping":
+                    shopping+=rec.amt
                 if rec.spent_on=="RENT":
                         rent+=rec.amt
                 if rec.spent_on=="SUBSCRIPTION":
@@ -355,7 +355,7 @@ class MoneyController(http.Controller):
             category.append({"name":"Subscription","amount":round(subscription,2)})
             category.append({"name":"Savings","amount":round(savings,2)})
             category.append({"name":"Renting","amount":round(rent,2)})
-            category.append({"name":"Food/Groceries","amount":round(foodgroceries,2)})
+            category.append({"name":"Food/Groceries","amount":round(shopping,2)})
             category.append({"name":"Entertainment","amount":round(entertainment,2)})
             category.append({"name":"Income","amount":round(income,2)})
             category.append({"name":"Education","amount":round(education,2)})
@@ -384,7 +384,6 @@ class MoneyController(http.Controller):
         access_token = data['access_token']
         date = data['date']
         period = data['period']
-        agregades=[]
         category=[]
         bill=0.00
         charity=0.00
@@ -394,7 +393,7 @@ class MoneyController(http.Controller):
         spending=0.00
         education=0.00
         entertainment=0.00
-        foodgroceries=0.00
+        shopping=0.00
         rent=0.00
         meds=0.00
         subscription=0.00
@@ -426,7 +425,9 @@ class MoneyController(http.Controller):
         account_id= request.env['users.account'].sudo().search([('partner_id.email', '=',token.partner_id.email)])
         if token:
             if data['period']=="Today":
-                expenses=account_id.expenditure.sudo().search([("date","=",data['date']),('account_id.partner_id.email', '=',token.partner_id.email)])
+                _logger.error(date)
+                _logger.error("TESTING THE DATE VALUES!!!!")
+                expenses=account_id.expenditure.sudo().search([("date","=",date),('account_id.partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses:
                     if rec.spent_on=="INCOME":
                         income+=rec.amt
@@ -444,8 +445,8 @@ class MoneyController(http.Controller):
                         education+=rec.amt
                     if rec.spent_on=="ENTERTAINMENT":
                             entertainment+=rec.amt
-                    if rec.spent_on=="FOODGROCERIES":
-                        foodgroceries+=rec.amt
+                    if rec.spent_on=="shopping":
+                        shopping+=rec.amt
                     if rec.spent_on=="RENT":
                             rent+=rec.amt
                     if rec.spent_on=="SUBSCRIPTION":
@@ -471,7 +472,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Transport","amount":round(transport,2) if transport>0 else round(0.00),"per":round(transport/income*100,1) if transport>0 else round(0.00)})
                 category.append({"name":"Subscription","amount":round(subscription,2) if subscription>0 else round(0.00),"per":round(subscription/income*100,1) if subscription>0 else round(0.00)})
                 category.append({"name":"Renting","amount":round(rent,2) if rent>0 else round(0.00),"per":round(rent/income*100,1) if rent>0 else round(0.00)})
-                category.append({"name":"Food/Groceries","amount":round(foodgroceries,2) if foodgroceries>0 else round(0.00),"per":round(foodgroceries/income*100,1) if foodgroceries>0 else round(0.00)})
+                category.append({"name":"Food/Groceries","amount":round(0.00) if shopping<1 else round(shopping,2),"per":round(0.00) if shopping<1 else round(shopping/income*100,1)})
                 category.append({"name":"Savings","amount":round(saves,2) if saves>0 else round(0.00),"per":round(saves/income*100,1) if saves>0 else round(0.00)})
                 category.append({"name":"Entertainment","amount":round(entertainment,2) if entertainment>0 else round(0.00),"per":round(entertainment/income*100,1) if entertainment>0 else round(0.00)})
                 category.append({"name":"Education","amount":round(education,2) if education>0 else round(0.00),"per":round(education/income*100,1) if education>0 else round(0.00)})
@@ -491,39 +492,39 @@ class MoneyController(http.Controller):
             if data['period']=="thisMonth":
                 expenses=account_id.expenditure.sudo().search([('account_id.partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses:
-                    if rec.spent_on=="INCOME" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="INCOME" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         income+=rec.amt
-                    if rec.spent_on not in ["INCOME"] and rec.date.month==data['date'].month:
+                    if rec.spent_on not in ["INCOME"] and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         spending+=rec.amt
-                    if rec.spent_on=="BILL" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="BILL" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         bill+=rec.amt
-                    if rec.spent_on=="CHARITY" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="CHARITY" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         charity+=rec.amt
-                    if rec.spent_on=="CLOTHING" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="CLOTHING" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         clothing+=rec.amt
-                    if rec.spent_on=="ELECTRONICS" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="ELECTRONICS" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         electronics+=rec.amt
-                    if rec.spent_on=="EDUCATION" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="EDUCATION" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         education+=rec.amt
-                    if rec.spent_on=="ENTERTAINMENT" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="ENTERTAINMENT" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             entertainment+=rec.amt
-                    if rec.spent_on=="FOODGROCERIES" and rec.date.month==data['date'].month:
-                        foodgroceries+=rec.amt
-                    if rec.spent_on=="RENT" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="shopping" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
+                        shopping+=rec.amt
+                    if rec.spent_on=="RENT" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             rent+=rec.amt
-                    if rec.spent_on=="SUBSCRIPTION" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="SUBSCRIPTION" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             subscription+=rec.amt
-                    if rec.spent_on=="TRANSPORT" and rec.date.month==data['date'].month:
+                    if rec.spent_on=="TRANSPORT" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             transport+=rec.amt
-                    if rec.spent_on=="SAVINGS"  and rec.date.month==data['date'].month:
+                    if rec.spent_on=="SAVINGS"  and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             saves+=rec.amt
-                    if rec.spent_on=="VACATIONS"  and rec.date.month==data['date'].month:
+                    if rec.spent_on=="VACATIONS"  and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             vacation+=rec.amt
-                    if rec.spent_on=="HOUSEHOLDS"  and rec.date.month==data['date'].month:
+                    if rec.spent_on=="HOUSEHOLDS"  and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             households+=rec.amt
-                    if rec.spent_on=="OTHERS"  and rec.date.month==data['date'].month:
+                    if rec.spent_on=="OTHERS"  and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             others+=rec.amt
-                    if rec.spent_on=="MEDICATIONS" and  rec.date.month==data['date'].month:
+                    if rec.spent_on=="MEDICATIONS" and  rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             meds+=rec.amt
                 category.append({"name":"Others","amount":round(others,2) if others>0 else round(0.00),"per":round(others/income*100,1) if others>0 else round(0.00)})
                 category.append({"name":"Bill","amount":round(bill,2) if bill>0 else round(0.00),"per":round(bill/income*100,1)if bill>0 else round(0.00) })
@@ -532,7 +533,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Transport","amount":round(transport,2) if transport>0 else round(0.00),"per":round(transport/income*100,1) if transport>0 else round(0.00)})
                 category.append({"name":"Subscription","amount":round(subscription,2) if subscription>0 else round(0.00),"per":round(subscription/income*100,1) if subscription>0 else round(0.00)})
                 category.append({"name":"Renting","amount":round(rent,2) if rent>0 else round(0.00),"per":round(rent/income*100,1) if rent>0 else round(0.00)})
-                category.append({"name":"Food/Groceries","amount":round(foodgroceries,2) if foodgroceries>0 else round(0.00),"per":round(foodgroceries/income*100,1) if foodgroceries>0 else round(0.00)})
+                category.append({"name":"Food/Groceries","amount":round(shopping,2) if shopping>0 else round(0.00),"per":round(shopping/income*100,1) if shopping>0 else round(0.00)})
                 category.append({"name":"Savings","amount":round(saves,2) if saves>0 else round(0.00),"per":round(saves/income*100,1) if saves>0 else round(0.00)})
                 category.append({"name":"Entertainment","amount":round(entertainment,2) if entertainment>0 else round(0.00),"per":round(entertainment/income*100,1) if entertainment>0 else round(0.00)})
                 category.append({"name":"Education","amount":round(education,2) if education>0 else round(0.00),"per":round(education/income*100,1) if education>0 else round(0.00)})
@@ -549,8 +550,8 @@ class MoneyController(http.Controller):
                     "Message":"Customer Transactions"
                 }
             if data['period']=="past6Month":
-                date_6_ago = (date.today() + relativedelta(months=-6))
-                expenses=account_id.expenditure.sudo().search([("date",">=",date_6_ago),("date","<=",data['date']),('account_id.partner_id.email', '=',token.partner_id.email)])
+                date_6_ago = (datetime.strptime(str(date),'%m/%d/%Y') + relativedelta(months=-6))
+                expenses=account_id.expenditure.sudo().search([("date",">=",date_6_ago),("date","<=",datetime.strptime(str(date),'%m/%d/%Y')),('account_id.partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses:
                     if rec.spent_on=="BILL":
                         bill+=rec.amt
@@ -568,8 +569,8 @@ class MoneyController(http.Controller):
                         education+=rec.amt
                     if rec.spent_on=="ENTERTAINMENT":
                             entertainment+=rec.amt
-                    if rec.spent_on=="FOODGROCERIES":
-                        foodgroceries+=rec.amt
+                    if rec.spent_on=="shopping":
+                        shopping+=rec.amt
                     if rec.spent_on=="RENT":
                             rent+=rec.amt
                     if rec.spent_on=="SUBSCRIPTION":
@@ -595,7 +596,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Transport","amount":round(transport,2) if transport>0 else round(0.00),"per":round(transport/income*100,1) if transport>0 else round(0.00)})
                 category.append({"name":"Subscription","amount":round(subscription,2) if subscription>0 else round(0.00),"per":round(subscription/income*100,1) if subscription>0 else round(0.00)})
                 category.append({"name":"Renting","amount":round(rent,2) if rent>0 else round(0.00),"per":round(rent/income*100,1) if rent>0 else round(0.00)})
-                category.append({"name":"Food/Groceries","amount":round(foodgroceries,2) if foodgroceries>0 else round(0.00),"per":round(foodgroceries/income*100,1) if foodgroceries>0 else round(0.00)})
+                category.append({"name":"Food/Groceries","amount":round(shopping,2) if shopping>0 else round(0.00),"per":round(shopping/income*100,1) if shopping>0 else round(0.00)})
                 category.append({"name":"Savings","amount":round(saves,2) if saves>0 else round(0.00),"per":round(saves/income*100,1) if saves>0 else round(0.00)})
                 category.append({"name":"Entertainment","amount":round(entertainment,2) if entertainment>0 else round(0.00),"per":round(entertainment/income*100,1) if entertainment>0 else round(0.00)})
                 category.append({"name":"Education","amount":round(education,2) if education>0 else round(0.00),"per":round(education/income*100,1) if education>0 else round(0.00)})
@@ -623,6 +624,7 @@ class MoneyController(http.Controller):
         access_token = data['access_token']
         name = data['name']
         amount = data['amt']
+        date = data['date']
         spent_on = data['spent_on']
         if not access_token:
             response = {
@@ -648,7 +650,12 @@ class MoneyController(http.Controller):
                 'message': 'Where Spent cannot be empty'
             }
             return response
-
+        if not date:
+            response = {
+                'code': 400,
+                'message': 'Date cannot be empty'
+            }
+            return response
         token = request.env['jwt_provider.access_token'].sudo().search([('is_expired', '!=',True),('token', '=',access_token)])
         if token:
             account_id = request.env['users.account'].sudo().search([('partner_id.email', '=',token.partner_id.email)])
@@ -657,7 +664,7 @@ class MoneyController(http.Controller):
                     expense=request.env['account.spend'].sudo().create({
                     'name':name,
                     'amt':amount,
-                    'date':today,
+                    'date':datetime.strptime(str(date),'%m/%d/%Y'),
                     'spent_on':spent_on.upper(),
                     'account_id':account_id.id,
                     })
@@ -672,7 +679,7 @@ class MoneyController(http.Controller):
                 if spent_on=="SAVINGS":
                     if float(amount)>account_id.balance:
                         return {
-                            "code":200,
+                            "code":403,
                             "status":"success",
                             "message":"You do not have enough money in your account"
                         }
@@ -682,7 +689,7 @@ class MoneyController(http.Controller):
                             expense_id=request.env['account.spend'].sudo().create({
                                 'name':name,
                                 'amt':amount,
-                                'date':today,
+                                'date':datetime.strptime(str(date),'%m/%d/%Y'),
                                 'spent_on':spent_on,
                                 "goal_id":goal_id.id,
                                 'account_id':account_id.id,
@@ -699,7 +706,7 @@ class MoneyController(http.Controller):
                 else:
                     if float(amount)>account_id.balance:
                         return {
-                            "code":200,
+                            "code":403,
                             "status":"success",
                             "message":"You do not have enough money in your account"
                         }
@@ -707,7 +714,7 @@ class MoneyController(http.Controller):
                         expense=request.env['account.spend'].sudo().create({
                             'name':name,
                             'amt':amount,
-                            'date':today,
+                            'date':datetime.strptime(str(date),'%m/%d/%Y'),
                             'spent_on':spent_on,
                             'account_id':account_id.id,
                         })
