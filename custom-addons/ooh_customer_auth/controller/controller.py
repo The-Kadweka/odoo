@@ -64,7 +64,7 @@ class MoneyController(http.Controller):
                     linesData.append(lines)
                 return {
                     "code":200,
-                    "status":"Successfuly",
+                    "status":"success",
                     "id":goal_id_data.id,
                     "name":goal_id_data.name,
                     "start":goal_id_data.from_date,
@@ -210,7 +210,7 @@ class MoneyController(http.Controller):
             if goal_id:
                 return{
                     "code":200,
-                    "status":"Successfuly",
+                    "status":"success",
                     "data":"Create a new goal"
                 }
         else:
@@ -259,7 +259,7 @@ class MoneyController(http.Controller):
                 selectGoals.append(select)
             return{
                 "code":200,
-                "status":"Successfuly",
+                "status":"success",
                 'item':len(goals),
                 'itemAb50':len([item for item in selectGoals if item['per']>0.49]),
                 'itemBl50':len([item for item in selectGoals if item['per']<0.5]),
@@ -365,7 +365,7 @@ class MoneyController(http.Controller):
             category.append({"name":"Medication","amount":round(meds,2)})
             return{
                 "code":200,
-                "status":"successfuly",
+                "status":"success",
                 "transactions":transactions,
                 "len":len(transactions),
                 "category":category,
@@ -382,6 +382,8 @@ class MoneyController(http.Controller):
     def view_filtered_data(self, **kw):
         data = json.loads(request.httprequest.data)
         access_token = data['access_token']
+        date = data['date']
+        period = data['period']
         agregades=[]
         category=[]
         bill=0.00
@@ -408,11 +410,23 @@ class MoneyController(http.Controller):
                 'message': 'Access Token cannot be empty'
             }
             return response
+        if not date:
+            response = {
+                'code': 400,
+                'message': 'Date cannot be empty'
+            }
+            return response
+        if not period:
+            response = {
+                'code': 400,
+                'message': 'Period cannot be empty'
+            }
+            return response
         token = request.env['jwt_provider.access_token'].sudo().search([('is_expired', '!=',True),('token', '=',access_token)])
         account_id= request.env['users.account'].sudo().search([('partner_id.email', '=',token.partner_id.email)])
         if token:
             if data['period']=="Today":
-                expenses=account_id.expenditure.sudo().search([("date","=",today),('account_id.partner_id.email', '=',token.partner_id.email)])
+                expenses=account_id.expenditure.sudo().search([("date","=",data['date']),('account_id.partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses:
                     if rec.spent_on=="INCOME":
                         income+=rec.amt
@@ -468,7 +482,7 @@ class MoneyController(http.Controller):
 
                 return{
                     "code":200,
-                    "status":"successfuly",
+                    "status":"successfully",
                     "expense":spending,
                     "category":category,
                     "balance":account_id.balance,
@@ -477,39 +491,39 @@ class MoneyController(http.Controller):
             if data['period']=="thisMonth":
                 expenses=account_id.expenditure.sudo().search([('account_id.partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses:
-                    if rec.spent_on=="INCOME" and rec.date.month==today.month:
+                    if rec.spent_on=="INCOME" and rec.date.month==data['date'].month:
                         income+=rec.amt
-                    if rec.spent_on not in ["INCOME"] and rec.date.month==today.month:
+                    if rec.spent_on not in ["INCOME"] and rec.date.month==data['date'].month:
                         spending+=rec.amt
-                    if rec.spent_on=="BILL" and rec.date.month==today.month:
+                    if rec.spent_on=="BILL" and rec.date.month==data['date'].month:
                         bill+=rec.amt
-                    if rec.spent_on=="CHARITY" and rec.date.month==today.month:
+                    if rec.spent_on=="CHARITY" and rec.date.month==data['date'].month:
                         charity+=rec.amt
-                    if rec.spent_on=="CLOTHING" and rec.date.month==today.month:
+                    if rec.spent_on=="CLOTHING" and rec.date.month==data['date'].month:
                         clothing+=rec.amt
-                    if rec.spent_on=="ELECTRONICS" and rec.date.month==today.month:
+                    if rec.spent_on=="ELECTRONICS" and rec.date.month==data['date'].month:
                         electronics+=rec.amt
-                    if rec.spent_on=="EDUCATION" and rec.date.month==today.month:
+                    if rec.spent_on=="EDUCATION" and rec.date.month==data['date'].month:
                         education+=rec.amt
-                    if rec.spent_on=="ENTERTAINMENT" and rec.date.month==today.month:
+                    if rec.spent_on=="ENTERTAINMENT" and rec.date.month==data['date'].month:
                             entertainment+=rec.amt
-                    if rec.spent_on=="FOODGROCERIES" and rec.date.month==today.month:
+                    if rec.spent_on=="FOODGROCERIES" and rec.date.month==data['date'].month:
                         foodgroceries+=rec.amt
-                    if rec.spent_on=="RENT" and rec.date.month==today.month:
+                    if rec.spent_on=="RENT" and rec.date.month==data['date'].month:
                             rent+=rec.amt
-                    if rec.spent_on=="SUBSCRIPTION" and rec.date.month==today.month:
+                    if rec.spent_on=="SUBSCRIPTION" and rec.date.month==data['date'].month:
                             subscription+=rec.amt
-                    if rec.spent_on=="TRANSPORT" and rec.date.month==today.month:
+                    if rec.spent_on=="TRANSPORT" and rec.date.month==data['date'].month:
                             transport+=rec.amt
-                    if rec.spent_on=="SAVINGS"  and rec.date.month==today.month:
+                    if rec.spent_on=="SAVINGS"  and rec.date.month==data['date'].month:
                             saves+=rec.amt
-                    if rec.spent_on=="VACATIONS"  and rec.date.month==today.month:
+                    if rec.spent_on=="VACATIONS"  and rec.date.month==data['date'].month:
                             vacation+=rec.amt
-                    if rec.spent_on=="HOUSEHOLDS"  and rec.date.month==today.month:
+                    if rec.spent_on=="HOUSEHOLDS"  and rec.date.month==data['date'].month:
                             households+=rec.amt
-                    if rec.spent_on=="OTHERS"  and rec.date.month==today.month:
+                    if rec.spent_on=="OTHERS"  and rec.date.month==data['date'].month:
                             others+=rec.amt
-                    if rec.spent_on=="MEDICATIONS" and  rec.date.month==today.month:
+                    if rec.spent_on=="MEDICATIONS" and  rec.date.month==data['date'].month:
                             meds+=rec.amt
                 category.append({"name":"Others","amount":round(others,2) if others>0 else round(0.00),"per":round(others/income*100,1) if others>0 else round(0.00)})
                 category.append({"name":"Bill","amount":round(bill,2) if bill>0 else round(0.00),"per":round(bill/income*100,1)if bill>0 else round(0.00) })
@@ -528,7 +542,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Medication","amount":round(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
                 return{
                     "code":200,
-                    "status":"successfuly",
+                    "status":"success",
                     "expense":spending,
                     "category":category,
                     "balance":account_id.balance,
@@ -536,10 +550,7 @@ class MoneyController(http.Controller):
                 }
             if data['period']=="past6Month":
                 date_6_ago = (date.today() + relativedelta(months=-6))
-                _logger.error(date_6_ago)
-                _logger.error(today)
-                _logger.error("TESTING THE VALUES OF DATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                expenses=account_id.expenditure.sudo().search([("date",">=",date_6_ago),("date","<=",today),('account_id.partner_id.email', '=',token.partner_id.email)])
+                expenses=account_id.expenditure.sudo().search([("date",">=",date_6_ago),("date","<=",data['date']),('account_id.partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses:
                     if rec.spent_on=="BILL":
                         bill+=rec.amt
@@ -594,7 +605,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Medication","amount":round(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
                 return{
                     "code":200,
-                    "status":"successfuly",
+                    "status":"success",
                     "expense":spending,
                     "category":category,
                     "balance":account_id.balance,
@@ -656,13 +667,13 @@ class MoneyController(http.Controller):
                             "code":200,
                             "record":account_id.balance,
                             "type":data["spent_on"],
-                            "message":"You have successfuly Created an Income"
+                            "message":"You have success Created an Income"
                         }
                 if spent_on=="SAVINGS":
                     if float(amount)>account_id.balance:
                         return {
                             "code":200,
-                            "status":"Successfuly",
+                            "status":"success",
                             "message":"You do not have enough money in your account"
                         }
                     else:
@@ -681,7 +692,7 @@ class MoneyController(http.Controller):
                                 account_id.sudo().write({"balance":account_id.balance-expense_id.amt})
                                 return {
                                     "code":200,
-                                    "status":"Successfuly",
+                                    "status":"success",
                                     "type":data["spent_on"],
                                     "message":"You Have Saved for Your Goal"
                                 }
@@ -689,7 +700,7 @@ class MoneyController(http.Controller):
                     if float(amount)>account_id.balance:
                         return {
                             "code":200,
-                            "status":"Successfuly",
+                            "status":"success",
                             "message":"You do not have enough money in your account"
                         }
                     else:
@@ -706,7 +717,7 @@ class MoneyController(http.Controller):
                                 "code":200,
                                 "record":account_id.balance,
                                 "type":data["spent_on"],
-                                "message":"You have successfuly Created an Expense"
+                                "message":"You have success Created an Expense"
                             }
         else:
             response = {
