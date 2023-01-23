@@ -425,8 +425,6 @@ class MoneyController(http.Controller):
         account_id= request.env['users.account'].sudo().search([('partner_id.email', '=',token.partner_id.email)])
         if token:
             if data['period']=="Today":
-                _logger.error(date)
-                _logger.error("TESTING THE DATE VALUES!!!!")
                 expenses=account_id.expenditure.sudo().search([("date","=",date),('account_id.partner_id.email', '=',token.partner_id.email)])
                 for rec in expenses:
                     if rec.spent_on=="INCOME":
@@ -445,7 +443,7 @@ class MoneyController(http.Controller):
                         education+=rec.amt
                     if rec.spent_on=="ENTERTAINMENT":
                             entertainment+=rec.amt
-                    if rec.spent_on=="shopping":
+                    if rec.spent_on=="FOODGROCERIES":
                         shopping+=rec.amt
                     if rec.spent_on=="RENT":
                             rent+=rec.amt
@@ -508,7 +506,7 @@ class MoneyController(http.Controller):
                         education+=rec.amt
                     if rec.spent_on=="ENTERTAINMENT" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             entertainment+=rec.amt
-                    if rec.spent_on=="shopping" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
+                    if rec.spent_on=="FOODGROCERIES" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         shopping+=rec.amt
                     if rec.spent_on=="RENT" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                             rent+=rec.amt
@@ -569,7 +567,7 @@ class MoneyController(http.Controller):
                         education+=rec.amt
                     if rec.spent_on=="ENTERTAINMENT":
                             entertainment+=rec.amt
-                    if rec.spent_on=="shopping":
+                    if rec.spent_on=="FOODGROCERIES":
                         shopping+=rec.amt
                     if rec.spent_on=="RENT":
                             rent+=rec.amt
