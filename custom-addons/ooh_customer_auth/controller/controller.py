@@ -53,9 +53,6 @@ class MoneyController(http.Controller):
             goal_id_data= request.env['personal.goals'].sudo().search([('id','=',data['goal_id']),('partner_id.email', '=',token.partner_id.email)])
             if goal_id_data:
                 for rec in goal_id_data.expense_id:
-                    # start_date = datetime.strptime(str(goal_id_data.from_date), "%Y-%m-%d")
-                    # end_date = datetime.strptime(str(goal_id_data.to_date), "%Y-%m-%d")
-                    # delta = relativedelta(end_date, start_date)
                     lines={
                     "id":rec.id,
                     "date":rec.date,
@@ -293,6 +290,7 @@ class MoneyController(http.Controller):
         vacation=0.00
         households=0.00
         others=0.00
+        airtime=0.00
         meds=0.00
         income=0.00
         savings=0.00
@@ -347,6 +345,8 @@ class MoneyController(http.Controller):
                         others+=rec.amt
                 if rec.spent_on=="MEDICATIONS":
                         meds+=rec.amt
+                if rec.spent_on=="AIRTIME":
+                        airtime+=rec.amt
             category.append({"name":"Others","amount":round(others,2)})
             category.append({"name":"Bill","amount":round(bill,2)})
             category.append({"name":"House Holds","amount":round(households,2)})
@@ -363,6 +363,7 @@ class MoneyController(http.Controller):
             category.append({"name":"Charity","amount":round(charity,2)})
             category.append({"name":"Clothing","amount":round(clothing,2)})
             category.append({"name":"Medication","amount":round(meds,2)})
+            category.append({"name":"Airtime","amount":round(airtime,2)})
             return{
                 "code":200,
                 "status":"success",
@@ -388,6 +389,7 @@ class MoneyController(http.Controller):
         bill=0.00
         charity=0.00
         clothing=0.00
+        credit=0.00
         electronics=0.00
         income=0.00
         spending=0.00
@@ -447,6 +449,8 @@ class MoneyController(http.Controller):
                         shopping+=rec.amt
                     if rec.spent_on=="RENT":
                             rent+=rec.amt
+                    if rec.spent_on=="AIRTIME":
+                            credit+=rec.amt
                     if rec.spent_on=="SUBSCRIPTION":
                             subscription+=rec.amt
                     if rec.spent_on=="TRANSPORT":
@@ -478,6 +482,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Charity","amount":round(charity,2) if charity>0 else round(0.00),"per":round(charity/income*100,1) if charity>0 else round(0.00)})
                 category.append({"name":"Clothing","amount":round(clothing,2) if clothing>0 else round(0.00),"per":round(clothing/income*100,1) if clothing>0 else round(0.00)})
                 category.append({"name":"Medication","amount":round(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
+                category.append({"name":"Airtime","amount":round(credit,2) if credit>0 else round(0.00),"per":round(credit/income*100,1) if credit>0 else round(0.00)})
 
                 return{
                     "code":200,
@@ -496,6 +501,8 @@ class MoneyController(http.Controller):
                         spending+=rec.amt
                     if rec.spent_on=="BILL" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         bill+=rec.amt
+                    if rec.spent_on=="AIRTIME" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
+                            credit+=rec.amt
                     if rec.spent_on=="CHARITY" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
                         charity+=rec.amt
                     if rec.spent_on=="CLOTHING" and rec.date.month==datetime.strptime(str(date),'%m/%d/%Y').month:
@@ -539,6 +546,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Charity","amount":round(charity,2) if charity>0 else round(0.00),"per":round(charity/income*100,1) if charity>0 else round(0.00)})
                 category.append({"name":"Clothing","amount":round(clothing,2) if clothing>0 else round(0.00),"per":round(clothing/income*100,1) if clothing>0 else round(0.00)})
                 category.append({"name":"Medication","amount":round(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
+                category.append({"name":"Airtime","amount":round(credit,2) if credit>0 else round(0.00),"per":round(credit/income*100,1) if credit>0 else round(0.00)})
                 return{
                     "code":200,
                     "status":"success",
@@ -587,6 +595,8 @@ class MoneyController(http.Controller):
                             others+=rec.amt
                     if rec.spent_on=="MEDICATIONS":
                             meds+=rec.amt
+                    if rec.spent_on=="AIRTIME":
+                            credit+=rec.amt
                 category.append({"name":"Others","amount":round(others,2) if others>0 else round(0.00),"per":round(others/income*100,1) if others>0 else round(0.00)})
                 category.append({"name":"Bill","amount":round(bill,2) if bill>0 else round(0.00),"per":round(bill/income*100,1)if bill>0 else round(0.00) })
                 category.append({"name":"House Holds","amount":round(households,2) if households>0 else round(0.00),"per":round(households/income*100,1) if households>0 else round(0.00)})
@@ -602,6 +612,7 @@ class MoneyController(http.Controller):
                 category.append({"name":"Charity","amount":round(charity,2) if charity>0 else round(0.00),"per":round(charity/income*100,1) if charity>0 else round(0.00)})
                 category.append({"name":"Clothing","amount":round(clothing,2) if clothing>0 else round(0.00),"per":round(clothing/income*100,1) if clothing>0 else round(0.00)})
                 category.append({"name":"Medication","amount":round(meds,2) if meds>0 else round(0.00),"per":round(meds/income*100,1) if meds>0 else round(0.00)})
+                category.append({"name":"Airtime","amount":round(credit,2) if credit>0 else round(0.00),"per":round(credit/income*100,1) if credit>0 else round(0.00)})
                 return{
                     "code":200,
                     "status":"success",

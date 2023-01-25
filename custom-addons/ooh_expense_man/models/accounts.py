@@ -46,6 +46,7 @@ class AccountsSpent(models.Model):
         ('MEDICATIONS', 'MEDICATIONS'),
         ('RENT', 'RENT'),
         ('SUBSCRIPTION', 'SUBSCRIPTIONS'),
+        ('AIRTIME', 'AIRTIME'),
         ('TRANSPORT', 'TRANSPORT'),
         ('VACATIONS', 'VACATION'),
         ('HOUSEHOLDS', 'HOUSEHOLDS'),
